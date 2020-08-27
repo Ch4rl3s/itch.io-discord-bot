@@ -4,7 +4,7 @@ let prefix = "!"
 var listenChannel;
 var date = new Date();
 var http = require('https');
-var TOKEN = '';
+var TOKEN = 'YOUR_TOKEN_HERE';
 var itchApiKey
 var options = {
   host: 'itch.io',
@@ -62,43 +62,39 @@ client.on('message', msg => {
   }
 
 
-
-if (toWords(msg.content)[0] == '!check' && itchApiKey!=null){
+if (toWords(msg.content)[0] == '!check' && itchApiKey != null) {
     let msgArr = toWords(msg.content);
-   	var req = http.get(options, function(res) {
-   	//console.log('STATUS: ' + res.statusCode);
-   	//console.log('HEADERS: ' + JSON.stringify(res.headers));
-   	//console.log('HEADERS: ' + JSON.stringify(res.headers));
-   	var bodyChunks = [];
-   	res.on('data', function(chunk) {
-   	  bodyChunks.push(chunk);
-   	}).on('end', function() {
-    var body = Buffer.concat(bodyChunks);
-  	let a = JSON.parse(body);
-  	if (msgArr[1] == undefined){
-    	msg.channel.send('no paramets given')
-    }  else if (a['games'][msgArr[1]] == undefined) {
-    	msg.channel.send('No game with that id!')
-    } 
-    	else{
-    	    const embed = new MessageEmbed()
-    	    .setTitle( a['games'][msgArr[1]]['title'])
-    	    .setColor('#0099ff')
-        	.setThumbnail(a['games'][msgArr[1]]['cover_url'])
-        	.setDescription((`Downloads : ${a['games'][msgArr[1]]['downloads_count']}
+    var req = http.get(options, function(res) {
+        //console.log('STATUS: ' + res.statusCode);
+        //console.log('HEADERS: ' + JSON.stringify(res.headers));
+        //console.log('HEADERS: ' + JSON.stringify(res.headers));
+        var bodyChunks = [];
+        res.on('data', function(chunk) {
+            bodyChunks.push(chunk);
+        }).on('end', function() {
+            var body = Buffer.concat(bodyChunks);
+            let a = JSON.parse(body);
+            if (msgArr[1] == undefined) {
+                msg.channel.send('no paramets given')
+            } else if (a['games'][msgArr[1]] == undefined) {
+                msg.channel.send('No game with that id!')
+            } else {
+                const embed = new MessageEmbed()
+                    .setTitle(a['games'][msgArr[1]]['title'])
+                    .setColor('#0099ff')
+                    .setThumbnail(a['games'][msgArr[1]]['cover_url'])
+                    .setDescription((`Downloads : ${a['games'][msgArr[1]]['downloads_count']}
 Views : ${a['games'][msgArr[1]]['views_count']}
 Classification : ${a['games'][msgArr[1]]['classification']}`));
-        	//.setFooter('made by XdS', 'https://i.imgur.com/wSTFkRM.png');
+                    //.setFooter('made by Ch4rl3s');
 
-        		msg.channel.send(embed);
+                msg.channel.send(embed);
 
-      			}
-      //console.log(a);
-      //console.log('-----------------');
-      
-    		})
-  		});
-  	
+            }
+
+        })
+    });
+
 }
 
 if (msg.content === '!status'){
@@ -118,8 +114,6 @@ if (msg.content === '!itch.io'){
     }).on('end', function() {
       var body = Buffer.concat(bodyChunks);
       let a = JSON.parse(body);
-      //console.log(a);
-      //console.log('-----------------');
       const embed = new MessageEmbed()
       .setTitle( a['games'][0]['title'])
       .setColor(0xff0000)
